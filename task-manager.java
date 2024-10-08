@@ -25,6 +25,32 @@ public class TaskManager {
         System.arraycopy(name, 0, tempTasks, 0, name.length);
         return tempTasks;
     }
+    public static String[] StringArrayElementRemover(String[] name, int index) {
+        String[] tempTasks = new String[name.length - 1];
+
+        int j = 0;
+        for (int i = 0; i < name.length; i++) {
+            if (i != index) {
+                tempTasks[j++] = name[i];
+            }
+        }
+        return tempTasks;
+    }
+    public static String[] StringArrayElementEditor(String[] name, int index, String content){
+        String[] tempTasks = new String[name.length];
+        String oldContent = name[index];
+
+        int j = 0;
+        for (int i = 0; i < name.length; i++){
+            if (name[i] == oldContent){
+                tempTasks[i] = content;
+            }
+            else{
+                tempTasks[i] = name[i];
+            }
+        }
+        return tempTasks;
+    }
 
     public static void main(String[] args) {
         boolean keepRunning = true;
@@ -67,7 +93,7 @@ public class TaskManager {
                 }
                 ////////////////////////////////////////////////////////////////////////////
                 case "list" -> {
-                    String[] tempEmptyArray = new String[0];
+                    String[] tempEmptyArray = {};
                     int number;
                     boolean listMenuKeeper = true;
                     String spacer = "################################";
@@ -96,22 +122,42 @@ public class TaskManager {
                             }
                         }
                         System.out.println(spacer);
-                        System.out.println("Enter a command (edit, remove, purge, back)");
+                        System.out.println("Enter a command (edit, complete, clear, back)");
                         String commandInListMenu = scanner.nextLine().toLowerCase();
                         switch (commandInListMenu){
                             case "edit" -> {
-                                System.out.println("Enter a number of current task: ");
+                                System.out.println("Select a number of current task: ");
                                 int tempEditTask = scanner.nextInt();
+                                String selectedTask = tasks[tempEditTask - 1];
+
+                                System.out.println("Enter a new description for the task: ");
+                                String newDescription = scanner.nextLine();
+
+                                tasks = StringArrayElementEditor(tasks, (tempEditTask - 1), newDescription);
+
 
                             }
-                            case "remove" -> {
-                                
-                            }
-                            case "purge" -> {
+                            case "complete" -> {
+                                System.out.println("Select a number of current task: ");
+                                int tempEditTask = scanner.nextInt();
+                                String selectedTask = tasks[tempEditTask - 1];
+                                doneTasks = StringArrayExpander(doneTasks, 1);
+                                doneTasks[doneTasks.length - 1] = selectedTask;
 
+                                tasks = StringArrayElementRemover(tasks, tempEditTask - 1);
+                                System.out.println();
+                                System.out.println();
+                            }
+                            case "clear" -> {
+                                doneTasks = tempEmptyArray;
+                                System.out.println("Completed tasks have been cleared!");
+                                System.out.println();
+                                System.out.println();
                             }
                             case "back" -> {
-
+                                listMenuKeeper = false;
+                                System.out.println();
+                                System.out.println();
                             }
                         }
                     }
